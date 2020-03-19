@@ -18,8 +18,7 @@ def find_document_owner(doc_num):
     return 0
 
 
-def document_number_info():
-    doc_num = input('Введите номер документа - ')
+def document_number_info(doc_num):
     for document in documents:
         if document['number'] == str(doc_num):
             return f'{document["type"]} \"{document["number"]}\" \"{document["name"]}\"'
@@ -98,31 +97,36 @@ def add_shelf():
 
 
 def runner():
-    cmd = input('Введите команду - ')
-    if cmd == 'p' or cmd == 'people':
-        doc_num = input('Введите номер документа - ')
-        if find_document_owner(doc_num) != 0:
-            print(find_document_owner(doc_num))
-    elif cmd == 'l' or cmd == 'list':
-        if document_number_info() != 0:
-            print(document_number_info())
-    elif cmd == 's' or cmd == 'shelf':
-        doc_num = input('Введите номер документа - ')
-        if find_shelf(doc_num) != 0:
-            print(f'Документ с номером {doc_num} находится в директории под номером {find_shelf(doc_num)}')
-    elif cmd == 'a' or cmd == 'add':
-        add_document(documents, directories)
-        print(documents)
-    elif cmd == 'd' or cmd == 'delete':
-        doc_num = input('Введите номер документа - ')
-        delete_document(doc_num)
-    elif cmd == 'm' or cmd == 'move':
-        doc_num = input('Введите номер документа - ')
-        target_shelf = input('Введите номер директории - ')
-        document_move(str(doc_num), str(target_shelf))
-    elif cmd == 'as' or cmd == 'add shelf':
-        add_shelf()
-    else:
-        print('Вы ввели неверную команду или её нету в списке доступных команд')
+    while True:
+        cmd = input('Введите команду - ')
+        if cmd == 'p' or cmd == 'people':
+            doc_num = input('Введите номер документа - ')
+            if find_document_owner(doc_num) != 0:
+                print(find_document_owner(doc_num))
+        elif cmd == 'l' or cmd == 'list':
+            doc_num = input('Введите номер документа - ')
+            if document_number_info(doc_num) != 0:
+                print(document_number_info(doc_num))
+        elif cmd == 's' or cmd == 'shelf':
+            doc_num = input('Введите номер документа - ')
+            if find_shelf(doc_num) != 0:
+                print(f'Документ с номером {doc_num} находится в директории под номером {find_shelf(doc_num)}')
+        elif cmd == 'a' or cmd == 'add':
+            add_document(documents, directories)
+            print(documents)
+        elif cmd == 'd' or cmd == 'delete':
+            doc_num = input('Введите номер документа - ')
+            delete_document(doc_num)
+        elif cmd == 'm' or cmd == 'move':
+            doc_num = input('Введите номер документа - ')
+            target_shelf = input('Введите номер директории - ')
+            document_move(str(doc_num), str(target_shelf))
+        elif cmd == 'as' or cmd == 'add shelf':
+            add_shelf()
+        elif cmd == 'e' or cmd == 'end':
+            print('Программа завершена')
+            break
+        else:
+            print('Вы ввели неверную команду или её нету в списке доступных команд')
 
 runner()
