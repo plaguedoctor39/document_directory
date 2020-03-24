@@ -38,18 +38,29 @@ def add_document(docs, dirs):
     doc_num = input('Введите номер документа - ')
     doc_type = input('Введите тип документа - ')
     doc_owner = input('Введите владельца документа - ')
+    try:
+        if doc_owner == '':
+            raise KeyError
+    except KeyError:
+        print('Не введено поле name у документа')
+        return 0
     doc_directory = input('Введите номер директории, в которой будет храниться документ - ')
-    if str(doc_num) not in dirs[str(doc_directory)]:
-        dirs[doc_directory].append(doc_num)
-        new_doc = {
-            "type": doc_type,
-            "number": doc_num,
-            "name": doc_owner
-        }
-        docs.append(new_doc)
-        return docs, dirs
+    if doc_directory  in dirs:
+        if str(doc_num) not in dirs[str(doc_directory)]:
+            dirs[doc_directory].append(doc_num)
+            new_doc = {
+                "type": doc_type,
+                "number": doc_num,
+                "name": doc_owner
+            }
+            docs.append(new_doc)
+            print(documents)
+            return docs, dirs
+        else:
+            print(f'Документ {doc_num} уже есть в данной директории')
+            return 0
     else:
-        print(f'Документ {doc_num} уже есть в данной директории')
+        print(f'Директории с номером {doc_directory} не существует')
         return 0
 
 
@@ -96,6 +107,11 @@ def add_shelf():
         return 0
 
 
+def show_all_names():
+    for document in documents:
+        print(document['name'])
+
+
 def runner():
     while True:
         cmd = input('Введите команду - ')
@@ -113,7 +129,6 @@ def runner():
                 print(f'Документ с номером {doc_num} находится в директории под номером {find_shelf(doc_num)}')
         elif cmd == 'a' or cmd == 'add':
             add_document(documents, directories)
-            print(documents)
         elif cmd == 'd' or cmd == 'delete':
             doc_num = input('Введите номер документа - ')
             delete_document(doc_num)
@@ -121,11 +136,14 @@ def runner():
             doc_num = input('Введите номер документа - ')
             target_shelf = input('Введите номер директории - ')
             document_move(str(doc_num), str(target_shelf))
+            print(documents)
         elif cmd == 'as' or cmd == 'add shelf':
             add_shelf()
         elif cmd == 'e' or cmd == 'end':
             print('Программа завершена')
             break
+        elif cmd == 'an' or cmd == 'all names':
+            show_all_names()
         else:
             print('Вы ввели неверную команду или её нету в списке доступных команд')
 
