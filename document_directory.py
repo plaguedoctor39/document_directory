@@ -39,10 +39,10 @@ def add_document(docs, dirs):
     doc_type = input('Введите тип документа - ')
     doc_owner = input('Введите владельца документа - ')
     try:
-        if doc_owner == '':
+        if not doc_owner.isalpha():
             raise KeyError
     except KeyError:
-        print('Не введено поле name у документа')
+        print('Поле name у документа введено неверно')
         return 0
     doc_directory = input('Введите номер директории, в которой будет храниться документ - ')
     if doc_directory  in dirs:
@@ -109,7 +109,14 @@ def add_shelf():
 
 def show_all_names():
     for document in documents:
-        print(document['name'])
+        try:
+            if not document['name'].isalpha():
+                print(document['name'])
+                print(document['name'].isalpha())
+            else:
+                raise KeyError
+        except KeyError:
+            print(f'Поля name у документа с номером {document["number"]} нету ')
 
 
 def runner():
