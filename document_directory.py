@@ -1,13 +1,5 @@
-documents = [
-    {"type": "passport", "number": "2207 876234", "name": "Василий Гупкин"},
-    {"type": "invoice", "number": "11-2", "name": "Геннадий Покемонов"},
-    {"type": "insurance", "number": "10006", "name": "Аристарх Павлов"}
-]
-directories = {
-    '1': ['2207 876234', '11-2', '5455 028765'],
-    '2': ['10006', '5400 028765', '5455 002299'],
-    '3': []
-}
+from fixtures.dirs import directories
+from fixtures.docs import documents
 
 
 def find_document_owner(doc_num):
@@ -21,6 +13,7 @@ def find_document_owner(doc_num):
 def document_number_info(doc_num):
     for document in documents:
         if document['number'] == str(doc_num):
+            print(f'Информация о документе {doc_num} получена')
             return f'{document["type"]} \"{document["number"]}\" \"{document["name"]}\"'
     print(f'Документа с номером {doc_num} нету в базе')
     return 0
@@ -34,7 +27,7 @@ def find_shelf(doc_num):
     return 0
 
 
-def add_document(docs, dirs):
+def add_document():
     doc_num = input('Введите номер документа - ')
     doc_type = input('Введите тип документа - ')
     doc_owner = input('Введите владельца документа - ')
@@ -45,17 +38,18 @@ def add_document(docs, dirs):
         print('Поле name у документа введено неверно')
         return 0
     doc_directory = input('Введите номер директории, в которой будет храниться документ - ')
-    if doc_directory  in dirs:
-        if str(doc_num) not in dirs[str(doc_directory)]:
-            dirs[doc_directory].append(doc_num)
+    if doc_directory  in directories:
+        if str(doc_num) not in directories[str(doc_directory)]:
+            directories[doc_directory].append(doc_num)
             new_doc = {
                 "type": doc_type,
                 "number": doc_num,
                 "name": doc_owner
             }
-            docs.append(new_doc)
-            print(documents)
-            return docs, dirs
+            documents.append(new_doc)
+            # print(documents)
+            print(f'Документ {doc_num} был добавлен в каталог {doc_directory}')
+            return doc_directory
         else:
             print(f'Документ {doc_num} уже есть в данной директории')
             return 0
@@ -70,8 +64,8 @@ def delete_document(doc_num):
             documents.remove(document)
             directories[find_shelf(doc_num)].remove(doc_num)
             print(f'Документ {doc_num} был удален из каталога')
-            print(documents)
-            print(directories)
+            # print(documents)
+            # print(directories)
             return 0
         else:
             pass
@@ -135,7 +129,7 @@ def runner():
             if find_shelf(doc_num) != 0:
                 print(f'Документ с номером {doc_num} находится в директории под номером {find_shelf(doc_num)}')
         elif cmd == 'a' or cmd == 'add':
-            add_document(documents, directories)
+            add_document()
         elif cmd == 'd' or cmd == 'delete':
             doc_num = input('Введите номер документа - ')
             delete_document(doc_num)
@@ -154,4 +148,5 @@ def runner():
         else:
             print('Вы ввели неверную команду или её нету в списке доступных команд')
 
-runner()
+if __name__ == '__main__':
+    runner()
